@@ -57,7 +57,7 @@ async def main(client: Client):
     avatar = f"https://robohash.org/{user_id}?bgset=bg2"
 
     with ui.header().classes("items-center justify-between"):
-        ui.label("谈天").classes("text-2xl text-bold tracking-tighter")
+        ui.label(APP_NAME).classes("text-2xl text-bold tracking-tighter")
         online_users()
 
     with ui.footer().classes("bg-white"), ui.column().classes("w-full max-w-3xl mx-auto my-6"):
@@ -90,12 +90,12 @@ async def main(client: Client):
 
 @ui.page("/privacy", title=f"隐私政策 | {APP_NAME}")
 async def privacy() -> None:
-    ui.markdown("""
+    ui.markdown(f"""
 # 隐私政策
 
 **生效日期：** 2025-11-26
 
-欢迎使用谈天（以下简称“本应用”）。本隐私政策旨在说明本应用在您使用服务过程中，如何收集、使用和保护您的信息。
+欢迎使用{APP_NAME}（以下简称“本应用”）。本隐私政策旨在说明本应用在您使用服务过程中，如何收集、使用和保护您的信息。
 
 ## 1. 信息的收集与使用
 
@@ -171,7 +171,7 @@ async def privacy() -> None:
 if __name__ in {"__main__", "__mp_main__"}:
     ui.run(
         host="0.0.0.0",
-        title="谈天",
+        title=APP_NAME,
         storage_secret="THIS_NEEDS_TO_BE_CHANGED",
         language="zh-CN",
         fastapi_docs=False
