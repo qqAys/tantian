@@ -1,0 +1,7 @@
+services:
+  tantian:
+    image: qqays/tantian:latest  # Docker Hub
+    # image: ghcr.io/qqays/tantian:latest  # GitHub Container Registry
+    ports:
+      - "8080:8080"
+    restart: always  # DO NOT CHANGE: This is feature. To make sure the container is always restarted.
