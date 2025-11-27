@@ -1,10 +1,12 @@
 import logging
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 from uuid import uuid4
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+from fastapi.responses import FileResponse
 from nicegui import ui, app, Client
 
 APP_NAME = "谈天"
@@ -26,6 +28,17 @@ time_format = "%Y-%m-%d %H:%M:%S %z (%Z)"
 
 reload_job_name = "reload_app"
 next_reload = "N/A"
+
+BASE_DIR = Path(__file__).resolve().parent
+favicon_path = BASE_DIR / "static" / "favicon.ico"
+print(favicon_path)
+
+
+def favicon():
+    return FileResponse(favicon_path, media_type="image/x-icon")
+
+
+app.add_api_route("/favicon.ico", favicon)
 
 
 def current_stamp() -> str:
@@ -161,6 +174,7 @@ if __name__ in {"__main__", "__mp_main__"}:
         host="0.0.0.0",
         port=int(os.getenv("APP_PORT", "8080")),
         title=APP_NAME,
+        favicon=favicon_path,
         language="zh-CN",
         storage_secret=storage_secret,
         fastapi_docs=False,
