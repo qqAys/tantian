@@ -31,7 +31,6 @@ next_reload = "N/A"
 
 BASE_DIR = Path(__file__).resolve().parent
 favicon_path = BASE_DIR / "static" / "favicon.ico"
-print(favicon_path)
 
 
 def favicon():
