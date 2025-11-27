@@ -1,0 +1,13 @@
+services:
+  nicegui:
+    image: zauberzeug/nicegui:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/app
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - STORAGE_SECRET=change-this-to-yor-own-private-secret
+      - APP_HOST=0.0.0.0
+      - APP_PORT=80
