@@ -1,0 +1,51 @@
+name: Publish Docker Image to GitHub Packages and Docker Hub
+
+on:
+  push:
+    branches: [ $default-branch ]
+    tags: [ 'v*.*.*' ]
+
+env:
+  IMAGE_NAME: qqays/tantian
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract branch or tag
+        id: vars
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          fi
+
+      - name: Build and push Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ghcr.io/${{ env.IMAGE_NAME }}:latest \
+            -t ghcr.io/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            -t ${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            --push .
